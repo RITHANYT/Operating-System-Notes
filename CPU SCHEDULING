@@ -1,0 +1,153 @@
+A process can be in any of the following states –
+
+1.New state
+2.Ready state
+3.Running state
+4.Waiting state
+5.Terminated
+--New State
+Process it submitted to the process queue, it in turns acknowledges submission.
+Once submission is acknowledged, the process is given new status.
+--Ready State
+It then goes to Ready State, at this moment the process is waiting to be assigned a processor by the OS
+--Running State
+Once the Processor is assigned, the process is being executed and turns in Running State.
+---Wait and Termination State
+1.Now the process can follow the following transitions –
+   The process may have all resources it needs and may get directly executed and goes to Termination State.
+   Process may need to go to waiting state any of the following
+       Access to Input/Output device (Asking user the values that are required to be added) via console
+       Process maybe intentionally interrupted by OS, as a higher priority operation maybe required, to be completed first
+       A resource or memory access that maybe locked by another process, so current process goes to waiting state and waits for the resource to get free.
+Once requirements are completed i.e. either it gets back the priority to executed or requested locked resources are available to use, the process will go to running state again where, it may directly go to termination state or may be required 
+to wait again for a possible required input/resource/priority interrupt.
+
+*********************************Process Control Block in Operating System*************************************
+PCB or Process control Block is a data structure which has all the information that is needed by a schedular to schedule 
+a particular process, this data structure rests in the operating system Kernel.
+Components:
+ 1.  Process ID (PID):
+            A unique number assigned to each process
+2. Process Stage:
+            The current state of the process.
+3.Process Privileges:
+            Permissions the process has (like access to files, memory areas, or devices).
+4.Pointer to Parent Process:
+            A pointer that tells which process created this one.Example: If a terminal process 
+launches a Python script, that script is a child of the terminal
+5.Program Counter :
+            Stores the address of the next instruction to execute in the program.
+            So when the CPU switches back to this process, it resumes exactly where it left off.
+6.CPU Registers:
+             Before the execution of the program the CPU registered where the process needs to be stored at.
+7.7. Scheduling Information:
+            What: Details that help the scheduler decide which process to run next.
+            Priority
+           Scheduling queue pointers
+            CPU burst time
+8. Memory Management Information:
+            stores Page tables,Segment tables,Memory limits
+9. Accounting Information:Statistics and limits related to the process.
+Includes:
+CPU time used
+Time limits
+Process start time
+User ID
+10. I/O Status Information:List of I/O devices the process can use or is using.
+
+*****************Process Scheduling in Operating System*******************************
+Def: The decision to move different parallel processes competing with one another for execution, to different 
+states like Ready to running or running to exit state based on a certain decision strategy is known as Process 
+Scheduling in Operating System.
+
+@@@Intelligent Scheduling
+ ✅ Keep the CPU busy – so it’s not idle when there are tasks waiting.
+⏱️ Reduce critical execution time – so important processes run faster.
+🎯 Smartly prioritize – don’t waste time on less important work.
+💬 Reduce response time – user should get feedback quickly.
+
+@@@@ypes of Process Scheduling:
+1.preemptive scheduling:
+         CPU can be taken away from a process if another higher priority process arrives.
+2.Non-Preemptive Scheduling:
+         Once a process starts running, it will complete before giving up CPU.
+
+@@@@Process Scheduling Queues:
+1.job queue: Whenever any process enters the system its there in job Queue.
+2.Ready Queue – Processes in the ready queue waiting for run time are in the ready queue.
+3.Device Queue – Some processes may be waiting some I/O operation, such processes are in the device queue.
+
+@@@Types of Schedulers:
+1.Long-term Scheduler(Job scedulers):It selects the process that are to be placed in ready queue. The long term scheduler basically 
+decides the priority in which processes must be placed in main memory. 
+2.Medium-term Scheduler:It places the blocked and suspended processes in the secondary memory of a computer system. The task of moving 
+from main memory to secondary memory is called swapping out. The task of moving back a swapped out process from secondary memory to main memory is known as swapping in. The swapping of 
+processes is performed to ensure the best utilisation of main memory.
+3.Short-term Scheduler(CPU schedulers):It decides the priority in which processes is in the ready queue are allocated the central processing unit (CPU) time for their execution.
+
+@@@Context Switching:
+       Context Switching is the process where the CPU stops executing one process and starts executing another, but remembers the state of the old process so it can be resumed later.
+      Purpose: It enables multitasking—i.e., running multiple processes on a single CPU as if they are running simultaneously.
+     Let’s consider 2 processes: P1 and P2
+
+vbnet
+Copy
+Edit
+Step 1: P1 is running on the CPU.
+Step 2: An interrupt occurs (say, user pressed a key or a timer expired).
+Step 3: OS saves the state of P1 in its PCB (PCB1).
+Step 4: OS loads the state of P2 from PCB2.
+Step 5: P2 starts executing.
+Step 6: Again an interrupt occurs.
+Step 7: OS saves P2’s state in PCB2.
+Step 8: OS restores P1’s state from PCB1.
+Step 9: P1 resumes execution from where it left.
+
+What is User Mode?:
+This is where regular applications (like browsers, games, etc.) run.
+Has limited access to system resources.
+Any direct access to hardware or memory is not allowed.
+
+What is Kernel Mode?:
+This is where the OS core functions run.
+Has full access to hardware and memory.
+Handles sensitive operations like device management, memory control, etc.
+** switch between user mode and kernel mode   is also called context switch  and mode switch.
+    ex:You're using MS Word (User Mode).
+       You click "Save" (which requires writing to disk).
+       A System Call is made → Switch to Kernel Mode to access disk.
+       Once done, switch back to User Mode and resume MS Word.
+Context switching doesn’t happen randomly. It is triggered by specific events:
+1.Multitasking (Preemptive Scheduling):The OS may forcefully switch between processes to ensure fair CPU usage.
+2.Interrupt Handling: 
+3.System Call: mode switch
+
+*************************************CPU Scheduling*********************************************
+CPU Scheduling is the method the operating system uses to select which process should run next on the CPU when there are multiple processes waiting to execute.
+@@@How CPU Scheduling Works?
+    Many processes are in the ready queue.
+    The short-term scheduler picks one process from this queue.
+    That process is given the CPU for a time duration (called CPU burst).
+  After the burst, the process may:
+      Finish execution
+      Go to I/O wait
+      Be preempted by another process (if allowed)
+      Scheduler repeats the process.
+
+1.CPU Burst Time : the duration for which a process gets control of the CPU is the CPU burst time, 
+and the concept of gaining control of the CPU is the CPU burst.
+2.CPU Utilization: Percentage of time CPU is working (not idle).
+3.Waiting Time: Time a process spends just waiting in the ready queue.
+4.Turnaround Time: Time from start to finish (submitted → completed)
+5.Throughput: Number of processes finished per unit time.
+6.Load Time: Average number of processes in the ready queue.
+7.Response Time: Time from submission to the first reaction (not full completion)
+
+**********************F*********First Come First Serve**************************************
+🥇 First Process = First to use CPU
+🛑 Non-Preemptive (Once a process starts, it cannot be interrupted)
+📚 Based on arrival order
+🐢 Can be slow if long jobs come first (causes Convoy Effect).
+1.Waiting Time = Turnaround Time – Burst Time
+2.Turnaround Time = Completion Time – Arrival Time
+3.

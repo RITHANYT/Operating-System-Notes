@@ -150,4 +150,85 @@ and the concept of gaining control of the CPU is the CPU burst.
 🐢 Can be slow if long jobs come first (causes Convoy Effect).
 1.Waiting Time = Turnaround Time – Burst Time
 2.Turnaround Time = Completion Time – Arrival Time
-3.
+What is Convoy Effect?
+If a big/long process comes first, the small ones behind it have to wait.
+--Disadvantage:
+    1.convoy effect
+    2.No priority
+   3.No flexibility
+**************************Shortest Job First(Non-preemptive)**********************************************
+the process with the shortest burst time (execution time) gets executed first.
+1.Once a process is given the CPU, it will not be interrupted.
+2.It runs till completion.
+3.CPU selects the shortest job only from the processes that have arrived.
+ Waiting Time = Starting Time – Arrival Time
+4.It is a greedy algorithm
+5.it has minimum average waiting time among all the scheduling algorithms
+6.It cannot be implemented i sgort term scheduling
+--Disadvantage:
+   1.Longer jobs never get executed if shorter jobs keep coming
+   Solution:Aging(Gradually increase the priority of waiting processes,eventually long jobs will get their turn)
+--Usage:
+Batch processing, long-term scheduling
+***************************Shortest Job First(preemptive)**************************************
+A process can be interrupted if a new process arrives with a shorter remaining burst time.
+1.A process starts executing.
+2.If a new process arrives with a shorter burst time, the current one is paused (preempted).
+3.CPU is re-allocated to the new shorter process.
+4.The paused process continues later.
+Like above SJF starvation happens and its solution is aging.
+
+******************************Round Robin *******************************************************
+   Gives each process a fixed time slice called a time quantum (e.g., 3ms)
+✅ Processes are scheduled in a cyclic order (like taking turns)
+✅ If a process doesn't finish in its time quantum, it's moved to the end of the queue
+--------Advantage:
+  Each process gets equal CPU time
+  No starvation
+------Disadvantage:
+   1.too small time quantum = frequent context switching = overhead
+   2.Too large quantum behaves like FCFS
+**********************************************Priority Scheduling Algorithm*******************************
+the process with the highest is executed first. Each process is assigned a priority & processes are given CPU time 
+according to their priority.
+
+Priority may also be of two types :
+Static
+Dynamic
+1.If 2 processes have equal priorities the those process are scheduled in First Come First Serve order.
+2.Priority can be defined internally or externally.
+3.It can be either preemptive or non preemptive algorithm.
+******************************Convey Effect************************************************
+The Convoy Effect is a performance bottleneck that occurs in First-Come, First-Served (FCFS) scheduling. It refers to a scenario where:
+
+A long-running (CPU-bound) process holds the CPU for a long time, forcing shorter (I/O-bound) processes to wait in the queue. This causes starvation 
+of fast processes and inefficient CPU and I/O utilization.
+
+why is it bad:
+1.Starvation
+2.High waiting time and low CPU utilization
+3.Wasted I/O: Devices wait even their jobs are ready.
+4.Decreased thoroghput: Fewer jobs completed per unit time.
+-------------------How to avoid this:
+1.ROUND ROBIN
+2.Shortest Remaining Time First(SRTF)
+3.Multilevel Queue Scheduling
+******************************Dispatcher***************************************************
+A Dispatcher is a component of the operating system that gives control of the CPU to the process selected by 
+the short-term scheduler.
+It performs context switching, switching to user mode, and jumping to the correct location in the user program.
+Component	Responsibilities
+Scheduler	- Chooses which process to run next
+           - Decides CPU allocation
+            - Maintains fairness and efficiency
+
+Dispatcher	- Context switching (save old process state, load new one)
+            - Switching CPU mode (user/kernel)
+           - Starts execution of selected process
+-------------How They Work Together
+Scheduler picks a process from the ready queue (short-term scheduler).
+Dispatcher takes over:
+-- --Saves current process state.
+------Loads new process state.
+------Switches to user mode.
+------Jumps to the new process’s code to begin execution.

@@ -1,0 +1,126 @@
+*************************Process Synchronization in Operating System************************************
+
+Process Synchronization is a mechanism used in Operating Systems to ensure that multiple processes
+or threads can safely access shared resources or data, without conflict.
+There are two ways any process can execute –
+1.In Concurrent Execution – the CPU scheduler switches rapidly between processes. 
+A process is stopped at any points and the processor is assigned to another instruction execution. Here, only one 
+instruction is executed at a time.
+2.Parallel execution – 2 or more instructions of different process execute simultaneously on different processing cores.
+
+When processes run concurrently (especially on multi-core systems), they may:
+---Access shared memory (e.g., account balance, files, tables).
+---Cause data inconsistency if not synchronized.
+
+********📌 Without synchronization: One process may override another’s update ➝ 
+leads to wrong or unpredictable results (called race condition).
+EX: Imagine you have $5000 in your bank account.
+Net Banking starts at t = 0ms
+➝ sees $5000, proceeds to withdraw $4000
+ATM starts at t = 0.5ms
+➝ still sees $5000 (since Net Banking hasn’t completed), proceeds to withdraw $4000
+ATM withdraws $4000 at t = 1.5ms
+Net Banking finishes at t = 2ms
+💥 Total Withdrawn: $8000 ➝ Not possible!
+✅ This happened because both processes accessed the balance at the same time — no synchronization!
+
+Why Synchronization is needed:
+1.To avoid race conditions
+2.To prevent inconsistent data
+3.To maintain system stability and integrity
+
+Process Types:
+Independent	:        Process does not affect or get affected by other processes
+Cooperative	:        Process depends on others or shares data/resources
+
+Every process has 4 sections in synchronization problems:
+1.Entry Section – Code to request access to critical section
+2.Critical Section – Shared data is accessed or modified here
+3.Exit Section – Code that signals that process is done
+4.Remainder Section – The rest of the code (non-critical)
+
+
+ Solutions:
+1.Mutual Exclusion – Only one process in the critical section at a time
+2.Progress – If no one is in the critical section, the next process should enter
+3.Bounded Waiting – A process should not wait forever to enter the critical section
+
+**********************************************************Inter-Process Communication (IPC)***************
+Inter-Process Communication (IPC) is a mechanism that allows processes to communicate and share data with each other.
+It’s mainly used when cooperating processes need to exchange information.
+
+There are 2 main methods used for IPC:
+1. 🧠 Shared Memory
+-----A portion of memory is shared between processes.
+-----Processes can read/write data directly in this shared space.
+-----Faster, because after setup, no kernel involvement is needed.
+----Requires synchronization (e.g., semaphores or mutexes) to avoid race conditions.
+
+2. 💌 Message Passing
+Processes send and receive messages through system calls.
+Messages may be sent synchronously or asynchronously.
+Easier to implement, and safer than shared memory (no direct access).
+
+****************************************************************Critical Section********************************************************
+A Critical Section is the portion of code where shared resources (like variables, files, memory)
+are accessed.
+⚠️ Problem: If multiple processes enter the critical section at the same time, it can lead to inconsistent 
+data, race conditions, or even deadlocks.
+To safely manage the critical section and avoid issues like deadlock or starvation, a solution must satisfy the following 3 conditions:
+
+Condition	Description
+1. Mutual Exclusion	: Only one process is allowed inside the critical section at any time.
+2. Progress	: If no process is inside the CS, then processes must not be blocked unnecessarily and should be allowed to enter.
+3. Bounded Waiting :	A process requesting to enter the CS will eventually get the chance, i.e., no starvation.
+
+****************************************KERNEL HANDLING IN OS**************************************
+What is Kernel Handling in the OS?
+The kernel is the core part of the operating system. It manages things like:
+1.CPU time
+2.Memory
+3.Input/Output devices
+4.Running programs (called processes)
+
+When a program (process) runs and needs to do something important like accessing shared data, it may need help from the kernel.
+Now, how the kernel handles multiple processes trying to run at the same time — especially in the Critical Section — is important.
+
+✌️ Two Ways the Kernel Can Handle Processes
+1. 🔄 Preemptive Kernel
+Think of it like a classroom debate where anyone can be interrupted anytime.
+A process running in the kernel mode can be paused (interrupted) at any time.
+This is great for real-time systems or responsive systems like games, or banking apps.
+But there's a risk! If two processes are accessing shared data, they might interfere with each other!
+
+💥 Race Around Condition Example
+Let’s say two people are trying to write on the same whiteboard at the same time:
+
+Person A writes “Hello”
+
+Person B writes “World” right over it
+
+Now the board shows something weird like “HeWorld” 🤯 — that’s a Race Condition.
+
+2. ⏸️ Non-Preemptive Kernel
+Think of it like a person giving a speech — others wait till they finish before speaking.
+
+Once a process starts running in kernel mode, no one else can interrupt.
+
+This prevents the race condition, because only one person (process) is modifying data at a time.
+
+It’s safer but slower, because other processes must wait their turn.
+
+*****************************************MUTEX********************************************
+
+Mutex is binary → It’s either locked (1) or unlocked (0)
+When a thread wants to use a shared resource:
+It locks the mutex.
+Uses the resource.
+Releases the mutex when done.
+
+Feature	                                         Description
+Binary	                                     Can be 0 or 1 (locked or unlocked)
+Lock/Unlock	                                  Supports lock() and unlock()
+Threads	                                    Designed mainly for threads within a process
+User-space	                                  Works in user-space programs
+Ownership	                                   Only the thread that locks can unlock
+One at a time	                             Only one thread can hold the lock

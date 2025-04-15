@@ -124,3 +124,94 @@ Threads	                                    Designed mainly for threads within a
 User-space	                                  Works in user-space programs
 Ownership	                                   Only the thread that locks can unlock
 One at a time	                             Only one thread can hold the lock
+
+*****************************************Semaphore************************************************
+This is a tool to manage access to shared resources by multiple processes or threads,
+especially to avoid race conditions in the critical section.
+
+There are two types:
+1.Binary Semaphore (0 or 1): Acts like a mutex
+2.Counting Semaphore (0 to N): Allows multiple accesses (like multiple permits)
+
+There are two key operations:
+1. wait() or P(s)
+Also called the decrement operation.
+
+2.2. signal() or V(s)
+Also called the increment operation.
+
+//////////example:
+// Counting semaphore initialized with value = 3
+
+wait(S);     // S becomes 2 (1st person enters)
+wait(S);     // S becomes 1 (2nd person enters)
+wait(S);     // S becomes 0 (3rd person enters)
+wait(S);     // BLOCKED (4th person must wait until someone exits)
+
+signal(S);   // S becomes 1 (a person leaves, 4th can now enter)
+
+
+//////Example: Binary Semaphore
+Let’s say only one process should access the critical section at a time.
+Semaphore S = 1;   // Binary Semaphore initialized to 1
+
+Process A:
+wait(S);
+// Critical Section
+signal(S);
+
+Process B:
+wait(S);
+// Critical Section
+signal(S);
+🛑 Important Notes
+Semaphores do not prevent deadlock—they help manage access but must be used carefully.
+The busy-wait loop (while (S <= 0);) can be replaced with blocking mechanisms in real 
+systems to save CPU.
+
+*********************************************Spinlock************************************
+A Spinlock is a lock where the thread actively waits in a loop ("spins") until the 
+lock becomes available.
+Instead of sleeping (like in a semaphore), the thread continuously checks the lock 
+variable in a loop.
+
+
+
+Feature	                      Mutex	                 Semaphore	                          Spinlock
+Used for	                   Threads	                 Processes	                          Threads
+Type	                        Binary	             Binary / Counting	                         Binary
+Operations	             lock(), unlock()	       wait(), signal()	                    lock(), unlock()
+User/Kernel Space	       User Space	           Kernel Space	                         Mostly Kernel/User
+Ownership	          Only one thread at a time	  Multiple processes (counting)	        Only one thread at a time
+CPU Utilization	     Low (if thread sleeps)	      Low (can block process)	            High (busy waiting)
+Best for	             Mutual Exclusion (Thread)	    Synchronization (Processes)	    Short Locks in SMP systems
+
+********************************************Atomic operation************************************
+An Atomic Operation is an operation that either happens completely or not 
+at all — and nothing can interfere while it's happening.
+They help us avoid race conditions in multithreaded or multiprocess environments.
+🏁 What is a race condition?
+A race condition occurs when:
+Two or more threads/processes access and modify shared data at the same time,
+The final result depends on the timing of who finishes first,
+And that leads to incorrect or unpredictable results.
+📚 Where Are Atomic Operations Used?
+    1.Multithreading to update shared variables safely
+    2.In OS kernels and device drivers
+    3.In lock-free data structures like atomic queues
+    4.In real-time systems where blocking (like locks) is bad
+🧱 Types of Atomic Operations:
+1.Read/Write atomicity – read or write to a memory location in one go.
+2.Atomic Increment/Decrement
+3.Compare-And-Swap (CAS) – very important!
+
+✨ Example of CAS (Compare-And-Swap):
+
+int atomicCompareAndSwap(int* addr, int expected, int newValue);
+
+
+If the value at addr equals expected, then it writes newValue.
+Else, it does nothing.
+This is used in lock-free algorithms to coordinate safely.
+
+
